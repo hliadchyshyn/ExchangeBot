@@ -5,12 +5,12 @@ import telebot
 
 import mono
 
-from boto.s3.connection import S3Connection
 
 currencyDict = {840: 'USA', 978: 'EUR', 980: 'UAH'}
 
-token = os.environ.get('TOKEN')
-bot = telebot.TeleBot(token)
+TOKEN = os.environ.get('TOKEN')
+bot = telebot.TeleBot(TOKEN)
+PORT = int(os.environ.get('PORT', 5000))
 
 
 @bot.message_handler(commands=['start'])
@@ -67,4 +67,7 @@ def send_exchange_result(message, ex_code):
         parse_mode='HTML')
 
 
-bot.polling(none_stop=True)
+bot.start_webhook(listen="0.0.0.0",
+                          port=int(PORT),
+                          url_path=TOKEN)
+bot.setWebhook('https://polar-hamlet-33607.herokuapp.com/' + TOKEN)
