@@ -9,7 +9,7 @@ from boto.s3.connection import S3Connection
 
 currencyDict = {840: 'USA', 978: 'EUR', 980: 'UAH'}
 
-token = S3Connection(os.environ['TOKEN'])
+token = os.environ.get('TOKEN')
 bot = telebot.TeleBot(token)
 
 
