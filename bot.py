@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
+import os
 
 import telebot
 
-import config
 import mono
+
+from boto.s3.connection import S3Connection
 
 currencyDict = {840: 'USA', 978: 'EUR', 980: 'UAH'}
 
-bot = telebot.TeleBot(config.TOKEN)
+token = S3Connection(os.environ['TOKEN'])
+bot = telebot.TeleBot(token)
 
 
 @bot.message_handler(commands=['start'])

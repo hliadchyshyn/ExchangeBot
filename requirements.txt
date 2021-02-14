@@ -6,3 +6,5 @@ pyTelegramBotAPI==3.7.6
 pytz==2021.1
 requests==2.25.1
 urllib3==1.26.3
+
+boto~=2.49.0
