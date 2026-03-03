@@ -1,10 +1,12 @@
 import threading
 import time
+from datetime import datetime, timedelta
 from typing import Optional
 
 import requests
 
 URL = 'https://api.monobank.ua/bank/currency'
+NBU_URL = 'https://bank.gov.ua/NBU_Exchange/exchange_site'
 _CACHE_TTL = 60  # seconds
 _cache: dict = {'data': None, 'ts': 0}
 _lock = threading.Lock()
@@ -30,6 +32,28 @@ def _load_exchange() -> list:
         _cache['data'] = data
         _cache['ts'] = now
     return data
+
+
+def get_nbu_history(ccy: str, days: int = 7) -> list[dict]:
+    """Fetch official NBU rates for the last `days` days.
+    Returns list of {'date': str, 'rate': float} newest first.
+    """
+    end = datetime.now()
+    start = end - timedelta(days=days)
+    params = {
+        'start': start.strftime('%Y%m%d'),
+        'end': end.strftime('%Y%m%d'),
+        'valcode': ccy.lower(),
+        'sort': 'exchangedate',
+        'order': 'desc',
+        'json': '',
+    }
+    response = requests.get(NBU_URL, params=params, timeout=10)
+    response.raise_for_status()
+    return [
+        {'date': entry['exchangedate'], 'rate': entry['rate']}
+        for entry in response.json()
+    ]
 
 
 def get_exchange(ccy_code: int) -> Optional[dict]:
