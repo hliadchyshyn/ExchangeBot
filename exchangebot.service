@@ -1,0 +1,15 @@
+[Unit]
+Description=ExchangeBot Telegram Bot
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root
+EnvironmentFile=/root/.env
+ExecStart=/root/venv/bin/python3 /root/bot.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
